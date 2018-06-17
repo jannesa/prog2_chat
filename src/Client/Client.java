@@ -8,11 +8,14 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class Client {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
+		Scanner eingabe = new Scanner(System.in);
+
 		try {
 			//Verbindung zum Server mit IP= x , Port= 5555 aufbauen
 			Socket client = new Socket("localhost", 5555);
@@ -26,13 +29,26 @@ public class Client {
             InputStream in = client.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             //-----
-			
+
+			System.out.print("Eingabe: ");
+			String anServer = eingabe.nextLine();
+
+
             //Nachricht zum Senden an den Server vorbereiten. 
-			writer.write("Hallo Server....");
+			writer.write(anServer + "\n");
 			//Vorgefertigte Nachricht an Server senden.
 			writer.flush();
+
+
+			// Streams auf dem Server ausgeben
+			String s = null;
+
+			// damit alle Nachrichten empfangen werden
+			while ((s = reader.readLine()) != null){
+				System.out.println("Empfangen von Server: " + s );
+			}
 			
-			//Writer & Reader schlieﬂen.
+			//Writer & Reader schlie√üen.
 			writer.close();
 			reader.close();
 			

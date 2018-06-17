@@ -28,8 +28,14 @@ public class Server {
             // Streams auf dem Server ausgeben
             String s = null;
 
+            // damit alle Nachrichten empfangen werden
             while ((s = reader.readLine()) != null){
-                System.out.println("Empfangen von Client" + s );
+                //Nachricht zum Senden an den Server vorbereiten.
+                writer.write(s + "\n");
+                //Vorgefertigte Nachricht an Client senden.
+                writer.flush();
+
+                System.out.println("Empfangen von Client: " + s );
             }
 
             writer.close();
