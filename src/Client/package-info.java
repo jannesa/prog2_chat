@@ -1,8 +1,0 @@
-/**
- * 
- */
-/**
- * @author jannes
- *
- */
-package Client;
