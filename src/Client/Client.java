@@ -1,5 +1,5 @@
-// Package muss natürlich angepasst werden
-package client;
+// Package muss natï¿½rlich angepasst werden
+package Client;
  
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -13,15 +13,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.Socket;
- 
-import javax.swing.JButton;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
+
+import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLEditorKit;
  
@@ -34,7 +27,9 @@ public class Client {
         JButton button_SendMessage;
         JTextField textField_Username;
         JScrollPane scrollPane_Messages;
-       
+        JList user_List;
+        DefaultListModel user_ListModel;
+
         Socket client;
         PrintWriter writer;
         BufferedReader reader;
@@ -48,7 +43,7 @@ public class Client {
                 clientFrame = new JFrame("Chat");
                 clientFrame.setSize(800, 600);
                
-                // Panel erzeugen, welches alle anderen Inhalte enthält
+                // Panel erzeugen, welches alle anderen Inhalte enthï¿½lt
                 clientPanel = new JPanel();
                
                 textArea_Messages = new JTextArea();
@@ -62,13 +57,25 @@ public class Client {
                
                 textField_Username = new JTextField(10);
                
-                // Scrollbalken zur textArea hinzufügen
+                // Scrollbalken zur textArea hinzufï¿½gen
                 scrollPane_Messages = new JScrollPane(textArea_Messages);
-                scrollPane_Messages.setPreferredSize(new Dimension(700, 500));
-                scrollPane_Messages.setMinimumSize(new Dimension(700, 500));
+                scrollPane_Messages.setPreferredSize(new Dimension(600, 500));
+                scrollPane_Messages.setMinimumSize(new Dimension(600, 500));
                 scrollPane_Messages.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-                scrollPane_Messages.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);              
-               
+                scrollPane_Messages.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+
+
+                user_ListModel = new DefaultListModel();
+                /*user_ListModel.addElement("Jane Doe");
+                user_ListModel.addElement("John Smith");
+                user_ListModel.addElement("Kathy Green");*/
+
+
+                user_List = new JList(user_ListModel);
+                user_List.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                user_List.setLayoutOrientation(JList.VERTICAL);
+                user_List.setPreferredSize(new Dimension(100,500));
                
                 if(!connectToServer()) {
                         // Connect-Label anzeigen ob verbunden oder nicht...
@@ -78,11 +85,12 @@ public class Client {
                 t.start();
                
                 clientPanel.add(scrollPane_Messages);
+                clientPanel.add(user_List);
                 clientPanel.add(textField_Username);
                 clientPanel.add(textField_ClientMessage);
                 clientPanel.add(button_SendMessage);
-               
-                // Panel zum ContentPane (Inhaltsbereich) hinzufügen
+
+                // Panel zum ContentPane (Inhaltsbereich) hinzufï¿½gen
                 clientFrame.getContentPane().add(BorderLayout.CENTER, clientPanel);
                
                 clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -112,7 +120,15 @@ public class Client {
                 textField_ClientMessage.setText("");
                 textField_ClientMessage.requestFocus();
         }
-       
+
+        public void appendUserNameToList(){
+
+                if (!user_ListModel.contains(textField_Username.getText())){
+                        user_ListModel.addElement(textField_Username.getText());
+                }
+        }
+
+
         public void appendTextMessages(String message) {
                 textArea_Messages.append(message + "\n");
         }
@@ -124,6 +140,7 @@ public class Client {
                 public void keyPressed(KeyEvent arg0) {
                         if(arg0.getKeyCode() == KeyEvent.VK_ENTER) {
                                 sendMessageToServer();
+                                appendUserNameToList();
                         }      
                 }
  
@@ -139,7 +156,8 @@ public class Client {
  
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                        sendMessageToServer();                 
+                        sendMessageToServer();
+                        appendUserNameToList();
                 }
                
         }
@@ -149,6 +167,7 @@ public class Client {
                 @Override
                 public void run() {
                         String message;
+
                        
                         try {
                                 while((message = reader.readLine()) != null) {

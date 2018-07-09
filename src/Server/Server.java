@@ -1,4 +1,4 @@
-package server;
+package Server;
 
 
 import java.io.*;
@@ -28,10 +28,10 @@ public class Server {
 				//OutputStreams (Objekte) des Client holen. Also das was der Client sendet.
 				PrintWriter writer = new PrintWriter(client.getOutputStream());
 				
-				//Printwriter des Clients der ArrayList hinzufügen. 
+				//Printwriter des Clients der ArrayList hinzufï¿½gen. 
 				list_clientwriter.add(writer);
 				
-				//Thread für jeden Client erstellen und starten.
+				//Thread fï¿½r jeden Client erstellen und starten.
 				Thread clientThread = new Thread(new ClientHandler(client));
 				clientThread.start();
 				
@@ -43,14 +43,14 @@ public class Server {
 	
 	
 	
-	//Server starten und schauen ob Server läuft.
+	//Server starten und schauen ob Server lï¿½uft.
 	public boolean runServer() {
 		try {
 			//Serversocket auf Port xxxx starten. 
 			server = new ServerSocket(5555);
 			System.out.println("Server wurde gestartet!");
 			
-			//Arraylist für Printwriter instanziieren. 
+			//Arraylist fï¿½r Printwriter instanziieren. 
 			list_clientwriter = new ArrayList<PrintWriter>();
 			
 			return true ;
@@ -89,6 +89,7 @@ public class Server {
 				
 				//Alles auslesen, was vom Socket des Client ankommt.
 				reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+
 			} catch(IOException e){
 				e.printStackTrace();
 			}
@@ -102,11 +103,11 @@ public class Server {
 			String nachricht;
 			
 			try {
-				//Solange Nachrichten vom Client kommen, Schleife ausführen.
+				//Solange Nachrichten vom Client kommen, Schleife ausfï¿½hren.
 				while((nachricht = reader.readLine()) != null) {
 					System.out.println("Vom Client: \n" + nachricht);
 					
-					//Nachricht vom Client an alle anderen Clients zurücksenden.
+					//Nachricht vom Client an alle anderen Clients zurï¿½cksenden.
 					sendToAllClients(nachricht);
 				}
 			}catch(IOException e) {
@@ -128,7 +129,7 @@ public class Server {
     		s.listenToClients();
     	}
     	else {
-    		System.out.println("Server hört nicht!");
+    		System.out.println("Server hï¿½rt nicht!");
     	}
     }
 }
