@@ -65,11 +65,15 @@ public class Server {
 	
 	//Nachrichten an Clients senden. 
 	public void sendToAllClients(String message) {
+		
+		
 		Iterator<PrintWriter> it =  list_clientwriter.iterator();
 		
 		while(it.hasNext()) {
 			//Printwriter zum "Verpacken" der Nachricht.
 			PrintWriter writer = (PrintWriter) it.next();
+			
+			System.out.println(message);
 			
 			//Verarbeitete Nachricht senden.
 			writer.println(message);

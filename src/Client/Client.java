@@ -20,6 +20,11 @@ import javax.swing.text.html.HTMLEditorKit;
  
 public class Client {
        
+
+		String username ;
+		
+		
+		
         JFrame clientFrame;
         JPanel clientPanel;
         JTextArea textArea_Messages;
@@ -33,12 +38,49 @@ public class Client {
         Socket client;
         PrintWriter writer;
         BufferedReader reader;
+        
+        
+        //For JDialog
+        JDialog dialog;
+        JButton btnOK;
+        JTextField txtNickname;
+        
+        
        
         public static void main(String[] args) {
                 Client c = new Client();
                 c.createGUI();
+                c.createLogon();
         }
        
+        
+
+        //Logon platform shows on startup.
+        public void createLogon() {
+        	dialog = new JDialog(clientFrame, "JDialog", true);
+        	
+        	
+            dialog.setSize(300,200);
+            dialog.setDefaultCloseOperation(
+                        WindowConstants.DISPOSE_ON_CLOSE);
+            
+            btnOK = new JButton("OK");
+            dialog.getContentPane().add(btnOK, BorderLayout.SOUTH);
+            btnOK.addActionListener(new btnOKlistener());
+            
+            txtNickname = new JTextField();
+            txtNickname.setText("Nickname");
+            dialog.getContentPane().add(txtNickname, BorderLayout.NORTH);
+            txtNickname.setColumns(10);
+            dialog.setVisible(true);
+            clientFrame.setVisible(true);
+            username = txtNickname.getText();
+            
+            appendUserNameToList();
+            
+           
+        }
+        
         public void createGUI() {
                 clientFrame = new JFrame("Chat");
                 clientFrame.setSize(800, 600);
@@ -76,6 +118,12 @@ public class Client {
                 user_List.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 user_List.setLayoutOrientation(JList.VERTICAL);
                 user_List.setPreferredSize(new Dimension(100,500));
+                
+                
+               
+                
+                
+                
                
                 if(!connectToServer()) {
                         // Connect-Label anzeigen ob verbunden oder nicht...
@@ -86,7 +134,7 @@ public class Client {
                
                 clientPanel.add(scrollPane_Messages);
                 clientPanel.add(user_List);
-                clientPanel.add(textField_Username);
+                //clientPanel.add(textField_Username);
                 clientPanel.add(textField_ClientMessage);
                 clientPanel.add(button_SendMessage);
 
@@ -94,7 +142,7 @@ public class Client {
                 clientFrame.getContentPane().add(BorderLayout.CENTER, clientPanel);
                
                 clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                clientFrame.setVisible(true);
+                
         }
        
         public boolean connectToServer() {
@@ -114,17 +162,20 @@ public class Client {
         }
        
         public void sendMessageToServer() {
-                writer.println(textField_Username.getText() + ": " + textField_ClientMessage.getText());
-                writer.flush();
-               
-                textField_ClientMessage.setText("");
-                textField_ClientMessage.requestFocus();
+                
+        	if(textField_ClientMessage.getText() != null) {
+	        	writer.println(username + ": " + textField_ClientMessage.getText());
+	            writer.flush();
+	               
+	            textField_ClientMessage.setText("");
+	            textField_ClientMessage.requestFocus();
+        	}
         }
 
         public void appendUserNameToList(){
-
-                if (!user_ListModel.contains(textField_Username.getText())){
-                        user_ListModel.addElement(textField_Username.getText());
+        		
+                if (!user_ListModel.contains(username)){
+                        user_ListModel.addElement(username);
                 }
         }
 
@@ -140,7 +191,7 @@ public class Client {
                 public void keyPressed(KeyEvent arg0) {
                         if(arg0.getKeyCode() == KeyEvent.VK_ENTER) {
                                 sendMessageToServer();
-                                appendUserNameToList();
+                                //appendUserNameToList();
                         }      
                 }
  
@@ -157,10 +208,25 @@ public class Client {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                         sendMessageToServer();
-                        appendUserNameToList();
+                        //appendUserNameToList();
                 }
                
         }
+        
+        
+        
+        public class btnOKlistener implements ActionListener {
+        	 
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    //sendMessageToServer();
+                    
+                    
+                    //Close JDialog.
+                    dialog.dispose();
+            }
+           
+    }
        
         public class MessagesFromServerListener implements Runnable {
  
