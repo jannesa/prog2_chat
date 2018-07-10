@@ -120,7 +120,9 @@ public class ClientThread implements Runnable{
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							Client.displayText.append("\n" + Client.userName + ": " + str);
+							//Client.displayText.append("\n" + Client.userName + ": " + str);
+							
+							PrivateDialog.setNewMsg("\n" + Client.userName + ": " + str);
 						}
 						
 					}
