@@ -21,9 +21,6 @@ public class Client {
        
 
 		String username ;
-		
-		
-		
         JFrame clientFrame;
         JPanel clientPanel;
         JPanel southPanel;
@@ -34,7 +31,6 @@ public class Client {
         JScrollPane scrollPane_Messages;
         JList user_List;
         DefaultListModel user_ListModel;
-
         Socket client;
         PrintWriter writer;
         BufferedReader reader;
@@ -154,6 +150,7 @@ public class Client {
                         reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                         writer = new PrintWriter(client.getOutputStream());
                         appendTextMessages("Netzwerkverbindung zu Server hergestellt");
+
                        
                         return true;
                 } catch(Exception e) {
