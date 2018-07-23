@@ -16,6 +16,7 @@ import javax.swing.JTextArea;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
+/*
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -23,6 +24,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import Client.PrivateDialog2.btnOKlistener;
 
 import com.jgoodies.forms.layout.FormSpecs;
+*/
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
