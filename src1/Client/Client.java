@@ -93,7 +93,7 @@ public class Client {
     }
 
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+
     public static void ConfigureMainWindow() {
 
 
@@ -103,12 +103,7 @@ public class Client {
         mainWindow.setMinimumSize(new Dimension(500, 300));
         mainWindow.pack();
         mainWindow.setLocationRelativeTo(null);
-        try {
-            // 1.6+
-            mainWindow.setLocationByPlatform(true);
-            mainWindow.setMinimumSize(mainWindow.getSize());
-        } catch (Throwable ignoreAndContinue) {
-        }
+
 
 
         //setting top bar
@@ -170,6 +165,9 @@ public class Client {
 
     }
 
+    public static JList getUserOnlineList() {
+        return userOnlineList;
+    }
 
     public static void MainWindow_Action() {
 
@@ -227,6 +225,7 @@ public class Client {
     public static void USERONLINELIST_ACTION(MouseEvent e) {
         if (e.getClickCount() == 2) {
             selectedUser = (String) userOnlineList.getSelectedValue();
+
             SwingUtilities.invokeLater(
                     new Runnable() {
                         public void run() {
@@ -272,13 +271,6 @@ public class Client {
         logInWindow.setMinimumSize(new Dimension(370, 90));
         logInWindow.pack();
         logInWindow.setLocationRelativeTo(null);
-        try {
-            // 1.6+
-            logInWindow.setLocationByPlatform(true);
-            logInWindow.setMinimumSize(logInWindow.getSize());
-        } catch (Throwable ignoreAndContinue) {
-        }
-
 
         logInWindowGui.setLayout(new FlowLayout());
         logInWindowGui.add(logInEnterUsername);

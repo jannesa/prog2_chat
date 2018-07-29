@@ -43,7 +43,7 @@ public class PrivateDialog extends JDialog{
 	
     public PrivateDialog() {
     	dialog = new JDialog();
-    	dialog.setTitle(Client.selectedUser);
+    	dialog.setTitle("Private Chat with " + Client.selectedUser);
     	
     	
         dialog.setSize(600,600);
@@ -108,12 +108,20 @@ public class PrivateDialog extends JDialog{
     
     public static void setNewMsg(String tmp) {
     	MsgOutput.append("\n"+tmp);
+
     }
-    
+
+
+    public static JTextField getMsgInput() {
+        return MsgInput;
+    }
+
     public static void SUBMIT_ACTION() throws IOException{
 		if(!MsgInput.getText().equals("")){
 			String msgtosend = "@"+ Client.selectedUser + ":" + MsgInput.getText();
+
 			Client.clientThread.SEND(msgtosend);
+
 			//MsgInput.requestFocus();
 			MsgInput.setText("");
 		}
