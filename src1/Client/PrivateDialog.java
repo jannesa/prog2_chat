@@ -34,16 +34,36 @@ import java.awt.Insets;
 
 public class PrivateDialog extends JDialog{
 	JDialog dialog;
-	private static JTextArea MsgOutput;
-	static JTextField MsgInput;
+	private JTextArea MsgOutput;
+	private JTextField MsgInput;
     //JFrame privateframe;
-    
-	
-	
-	
-    public PrivateDialog() {
+    private JButton btnSenden = new JButton("Senden");
+
+	private Client client;
+
+
+    public JButton getBtnSenden() {
+        return btnSenden;
+    }
+
+
+    public void setNewMsg(String tmp) {
+        MsgOutput.append("\n"+tmp);
+
+    }
+
+    public JTextField getMsgInput() {
+        return MsgInput;
+    }
+
+
+
+    public PrivateDialog(Client client) {
+
+        this.client = client;
+
     	dialog = new JDialog();
-    	dialog.setTitle("Private Chat with " + Client.selectedUser);
+    	dialog.setTitle("Private Chat with " + client.getSelectedUser());
     	
     	
         dialog.setSize(600,600);
@@ -73,59 +93,15 @@ public class PrivateDialog extends JDialog{
         dialog.getContentPane().add(MsgInput, gbc_MsgInput);
         MsgInput.setColumns(10);
         
-        JButton btnSenden = new JButton("Senden");
+
         GridBagConstraints gbc_btnSenden = new GridBagConstraints();
         gbc_btnSenden.gridx = 1;
         gbc_btnSenden.gridy = 1;
         dialog.getContentPane().add(btnSenden, gbc_btnSenden);
         dialog.setVisible(true);
 
-
-        btnSenden.addActionListener(new btnOKlistener());
-  
-        
-       
-    }
-    
-    
-    public class btnOKlistener implements ActionListener {
-      	 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-                //sendMessageToServer();
-        	try {
-				SUBMIT_ACTION();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-                
-                
-                
-        }
-       
-    }
-    
-    public static void setNewMsg(String tmp) {
-    	MsgOutput.append("\n"+tmp);
-
     }
 
 
-    public static JTextField getMsgInput() {
-        return MsgInput;
-    }
 
-    public static void SUBMIT_ACTION() throws IOException{
-		if(!MsgInput.getText().equals("")){
-			String msgtosend = "@"+ Client.selectedUser + ":" + MsgInput.getText();
-
-			Client.clientThread.SEND(msgtosend);
-
-			//MsgInput.requestFocus();
-			MsgInput.setText("");
-		}
-	}
-       
-    
 }
