@@ -1,8 +1,7 @@
 // Package muss nat�rlich angepasst werden
 package Client;
  
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -22,11 +21,9 @@ public class Client {
        
 
 		String username ;
-		
-		
-		
         JFrame clientFrame;
         JPanel clientPanel;
+        JPanel southPanel;
         JTextArea textArea_Messages;
         JTextField textField_ClientMessage;
         JButton button_SendMessage;
@@ -34,7 +31,6 @@ public class Client {
         JScrollPane scrollPane_Messages;
         JList user_List;
         DefaultListModel user_ListModel;
-
         Socket client;
         PrintWriter writer;
         BufferedReader reader;
@@ -61,8 +57,7 @@ public class Client {
         	
         	
             dialog.setSize(300,200);
-            dialog.setDefaultCloseOperation(
-                        WindowConstants.DISPOSE_ON_CLOSE);
+            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             
             btnOK = new JButton("OK");
             dialog.getContentPane().add(btnOK, BorderLayout.SOUTH);
@@ -83,11 +78,12 @@ public class Client {
         
         public void createGUI() {
                 clientFrame = new JFrame("Chat");
+                clientFrame.setLayout(new BorderLayout());
                 clientFrame.setSize(800, 600);
                
                 // Panel erzeugen, welches alle anderen Inhalte enth�lt
-                clientPanel = new JPanel();
-               
+                southPanel = new JPanel(new FlowLayout());
+
                 textArea_Messages = new JTextArea();
                 textArea_Messages.setEditable(false);
                
@@ -132,15 +128,18 @@ public class Client {
                 Thread t = new Thread(new MessagesFromServerListener());
                 t.start();
                
-                clientPanel.add(scrollPane_Messages);
-                clientPanel.add(user_List);
-                //clientPanel.add(textField_Username);
-                clientPanel.add(textField_ClientMessage);
-                clientPanel.add(button_SendMessage);
+                clientFrame.add(scrollPane_Messages, BorderLayout.CENTER);
+                clientFrame.add(user_List, BorderLayout.EAST);
+                //clientFrame.add(textField_Username);
+
+                // Container für textfeld und Knopf
+                clientFrame.add(southPanel, BorderLayout.SOUTH);
+                southPanel.add(textField_ClientMessage);
+                southPanel.add(button_SendMessage);
 
                 // Panel zum ContentPane (Inhaltsbereich) hinzuf�gen
-                clientFrame.getContentPane().add(BorderLayout.CENTER, clientPanel);
-               
+                //clientFrame.getContentPane().add(BorderLayout.CENTER, clientPanel);
+
                 clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 
         }
@@ -151,6 +150,7 @@ public class Client {
                         reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                         writer = new PrintWriter(client.getOutputStream());
                         appendTextMessages("Netzwerkverbindung zu Server hergestellt");
+
                        
                         return true;
                 } catch(Exception e) {
