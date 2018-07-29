@@ -4,13 +4,44 @@ import java.io.*;
 
 public class ServerThread extends Thread {
 
+	private final boolean online;
 	private Server server;
 	private Socket socket;
 	private ObjectInputStream input;
 	private ObjectOutputStream output;
 	private String username;
 	Object message;
-	
+
+
+	public Server getServer() {
+		return server;
+	}
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+	public ObjectInputStream getInput() {
+		return input;
+	}
+
+	public ObjectOutputStream getOutput() {
+		return output;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public Object getMessage() {
+		return message;
+	}
+
+
+	public boolean isOnline() {
+		return online;
+	}
+
 	public ServerThread(Server server, Socket socket) throws IOException, ClassNotFoundException {
 		// TODO Auto-generated constructor stub
 		this.server = server;
@@ -26,12 +57,14 @@ public class ServerThread extends Thread {
 		
 		server.sendToAll("!" + server.clients.keySet());
 		
-		server.showMessage("\n" + username + "(" + socket.getInetAddress().getHostAddress() + ") is online");
+		ServerView.showMessage("\n" + username + "(" + socket.getInetAddress().getHostAddress() + ") is online");
+		online = true;
+
 		//starting the thread
 		start();
 	}
 	
-	@SuppressWarnings("deprecation")
+
 	public void run(){
 		
 		try {
@@ -48,7 +81,9 @@ public class ServerThread extends Thread {
 				else {
 					//Message, die an den Privaten User geschickt bzw ausgeben wird!
 					String formattedMsg = "@" + username + message.toString().substring(message.toString().indexOf(':'));
-					
+
+					//server.showMessage("dieser nutzer hat dir eine nachricht geschickt :  "+ username + "\n");
+
 					//Nachrichten zum senden schicken.
 					server.sendPrivately(message.toString().substring(1, message.toString().indexOf(':')), formattedMsg);
 				}
@@ -59,6 +94,8 @@ public class ServerThread extends Thread {
 		} finally{
 			try {
 				server.removeClient(username);
+				System.out.println("logout :" + (String)username);
+
 				server.removeConnection(socket, username);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

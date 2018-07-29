@@ -16,6 +16,7 @@ import javax.swing.JTextArea;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
+/*
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -23,6 +24,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import Client.PrivateDialog2.btnOKlistener;
 
 import com.jgoodies.forms.layout.FormSpecs;
+*/
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -41,7 +43,7 @@ public class PrivateDialog extends JDialog{
 	
     public PrivateDialog() {
     	dialog = new JDialog();
-    	dialog.setTitle(Client.selectedUser);
+    	dialog.setTitle("Private Chat with " + Client.selectedUser);
     	
     	
         dialog.setSize(600,600);
@@ -106,12 +108,20 @@ public class PrivateDialog extends JDialog{
     
     public static void setNewMsg(String tmp) {
     	MsgOutput.append("\n"+tmp);
+
     }
-    
+
+
+    public static JTextField getMsgInput() {
+        return MsgInput;
+    }
+
     public static void SUBMIT_ACTION() throws IOException{
 		if(!MsgInput.getText().equals("")){
 			String msgtosend = "@"+ Client.selectedUser + ":" + MsgInput.getText();
+
 			Client.clientThread.SEND(msgtosend);
+
 			//MsgInput.requestFocus();
 			MsgInput.setText("");
 		}
