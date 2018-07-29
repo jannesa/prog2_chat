@@ -10,21 +10,25 @@ import java.util.*;
 public class ClientThread implements Runnable {
 
     //Globals
-    Socket SOCK;
+    Socket sock;
     public ObjectInputStream in;
     String[] currentUsers;
 
+    private Client client;
+
     //Constructor getting the socket
-    public ClientThread(Socket X) {
-        this.SOCK = X;
+    public ClientThread(Client client, Socket s) {
+        this.sock = s;
+        this.client = client;
+
     }
 
     @Override
     public void run() {
 
         try {
-            in = new ObjectInputStream(SOCK.getInputStream());
-            CheckStream();
+            in = new ObjectInputStream(sock.getInputStream());
+            checkStream();
 
         } catch (Exception E) {
             JOptionPane.showMessageDialog(null, E);
@@ -33,14 +37,14 @@ public class ClientThread implements Runnable {
     }
 
 
-    public void CheckStream() throws IOException, ClassNotFoundException {
+    public void checkStream() throws IOException, ClassNotFoundException {
         while (true) {
-            RECEIVE();
+            receive();
         }
     }
 
 
-    public void RECEIVE() throws IOException, ClassNotFoundException {
+    public void receive() throws IOException, ClassNotFoundException {
         if (!in.equals(null)) {
             String message = (String) in.readObject();
 
@@ -58,7 +62,9 @@ public class ClientThread implements Runnable {
                     SwingUtilities.invokeLater(
                             new Runnable() {
                                 public void run() {
-                                    Client.userOnlineList.setListData(currentUsers);
+
+                                    // TODO: hier müsste die GUI benachrichtigt werden
+                                    view.userOnlineList.setListData(currentUsers);
                                 }
                             }
                     );
@@ -71,7 +77,9 @@ public class ClientThread implements Runnable {
                 SwingUtilities.invokeLater(
                         new Runnable() {
                             public void run() {
-                                Client.displayText.append("\n" + temp2);
+
+                                // TODO: hier müsste die GUI benachrichtigt werden
+                                view.displayText.append("\n" + temp2);
 
                                 //PrivateDialog.setNewMsg(temp2);
 
@@ -85,20 +93,22 @@ public class ClientThread implements Runnable {
                         new Runnable() {
                             public void run() {
                                 //Client.displayText.append("\n"+temp3);
-                                PrivateDialog.setNewMsg(temp3);
+
+                                // TODO: hier müsste der Privatdialog benachrichtigt werden
+                                privateDialog.setNewMsg(temp3);
 
                                 System.out.println(temp3);
 
-                                int result = JOptionPane.showConfirmDialog(null, "Eine Nachricht von +", "Neue Nachricht", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                                int result = JOptionPane.showConfirmDialog(null, "Neue Nachricht " + temp3, "Neue Nachricht", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
                                 if (result == JOptionPane.YES_OPTION) {
 
-
-                                    PrivateDialog pd = new PrivateDialog();
+                                    new PrivateDialog(client);
 
 
                                 } else {
-                                    PrivateDialog.getMsgInput().requestFocus();
+                                    // TODO: hier müsste der Privatdialog benachrichtigt werden
+                                    privateDialog.getMsgInput().requestFocus();
                                 }
                             }
                         }
@@ -109,7 +119,7 @@ public class ClientThread implements Runnable {
     }
 
 
-    public void SEND(final String str) throws IOException {
+    public void send(String str) throws IOException {
         String writeStr;
         if (str.startsWith("@")) {
             SwingUtilities.invokeLater(
@@ -120,7 +130,7 @@ public class ClientThread implements Runnable {
                             // TODO Auto-generated method stub
                             //Client.displayText.append("\n" + Client.userName + ": " + str);
 
-                            PrivateDialog.setNewMsg("\n" + Client.userName + ": " + str);
+                            privateDialog.setNewMsg("\n" + client.getUserName() + ": " + str);
 
                         }
 
@@ -128,10 +138,10 @@ public class ClientThread implements Runnable {
             );
             writeStr = str;
         } else
-            writeStr = "@EE@|" + Client.userName + ": " + str;
+            writeStr = "@EE@|" + client.getUserName() + ": " + str;
 
-        Client.output.writeObject(writeStr);
-        Client.output.flush();
+        client.getOutput().writeObject(writeStr);
+        client.getOutput().flush();
 
 
     }
