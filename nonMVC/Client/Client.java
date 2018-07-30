@@ -11,8 +11,6 @@ import java.io.*;
 
 public class Client {
 
-
-    //Globals
     public static ClientThread clientThread;
     public static String userName = "Anonymous";
     public static Socket SOCK;
@@ -20,8 +18,7 @@ public class Client {
 
     static String selectedUser;
 
-
-    //GUI Globals - Main Window
+    //GUI - Main Window
     public static JFrame mainWindow = new JFrame();
     public static JPanel gui = new JPanel();
 
@@ -71,31 +68,21 @@ public class Client {
 
             top.setText("Online");
 
-            Thread X = new Thread(clientThread);
-            X.start();
+            Thread thread = new Thread(clientThread);
+            thread.start();
 
 
-        } catch (Exception x) {
-            System.out.println(x);
+        } catch (Exception e) {
+            System.out.println(e);
             JOptionPane.showMessageDialog(null, "Server Not Responding");
             System.exit(0);
         }
     }
 
-
+    //Setting up mainwindow.
     public static void BuildMainWindow() {
 
         mainWindow.setTitle("Project ChatRoom - " + userName);
-
-        ConfigureMainWindow();
-        MainWindow_Action();
-        mainWindow.setVisible(true);
-    }
-
-
-
-    public static void ConfigureMainWindow() {
-
 
         //setting MainWindow
         mainWindow.setContentPane(gui);
@@ -103,9 +90,7 @@ public class Client {
         mainWindow.setMinimumSize(new Dimension(500, 300));
         mainWindow.pack();
         mainWindow.setLocationRelativeTo(null);
-
-
-
+        
         //setting top bar
         top.setText("Offline");
 
@@ -157,19 +142,29 @@ public class Client {
         textCenter.add(buttonLabelText, BorderLayout.SOUTH);
 
 
-        //setting everything in gui
+        
         gui.setLayout(new BorderLayout(5, 5));
         gui.add(topBar, BorderLayout.NORTH);
         gui.add(userList, BorderLayout.EAST);
         gui.add(textCenter, BorderLayout.CENTER);
-
+        
+        submit.setEnabled(false);
+        mainWindow.setEnabled(false);
+        
+        
+        //Actionlistener Starten.
+        MainwindowAction();
+        mainWindow.setVisible(true);
     }
+
+
+
 
     public static JList getUserOnlineList() {
         return userOnlineList;
     }
 
-    public static void MainWindow_Action() {
+    public static void MainwindowAction() {
 
         mainWindow.addWindowListener(
                 new WindowAdapter() {
@@ -199,7 +194,7 @@ public class Client {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         try {
-                            SUBMIT_ACTION();
+                        	SubmitAction();
 
                         } catch (IOException e1) {
                             // TODO Auto-generated catch block
@@ -213,7 +208,7 @@ public class Client {
         userOnlineList.addMouseListener(
                 new MouseAdapter() {
                     public void mouseClicked(MouseEvent e) {
-                        USERONLINELIST_ACTION(e);
+                    	UseronlinelistAction(e);
 
                     }
                 }
@@ -221,15 +216,15 @@ public class Client {
 
     }
 
-
-    public static void USERONLINELIST_ACTION(MouseEvent e) {
+    //Open private chat with the selected user.
+    public static void UseronlinelistAction(MouseEvent e) {
         if (e.getClickCount() == 2) {
             selectedUser = (String) userOnlineList.getSelectedValue();
 
             SwingUtilities.invokeLater(
                     new Runnable() {
                         public void run() {
-                            PrivateDialog pd = new PrivateDialog();
+                            new PrivateDialog();
 //						typeText.setText("@" + selectedUser + ": ");
 //						typeText.requestFocus();
 
@@ -239,8 +234,8 @@ public class Client {
         }
     }
 
-
-    public static void SUBMIT_ACTION() throws IOException {
+    //Handel the input text after klicking send.
+    public static void SubmitAction() throws IOException {
         if (!typeText.getText().equals("")) {
             clientThread.SEND(typeText.getText());
             typeText.requestFocus();
@@ -249,23 +244,13 @@ public class Client {
     }
 
 
-    public static void Initialize() {
-        submit.setEnabled(false);
-        mainWindow.setEnabled(false);
-    }
 
 
+    //Create and set login window.
     public static void BuildLogInWindow() {
 
-        logInWindow.setTitle("Log In");
+        logInWindow.setTitle("Login");
 
-        ConfigureLogInWindow();
-        LogInWindow_Action();
-        logInWindow.setVisible(true);
-    }
-
-
-    public static void ConfigureLogInWindow() {
         logInWindow.setContentPane(logInWindowGui);
         logInWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         logInWindow.setMinimumSize(new Dimension(370, 90));
@@ -276,14 +261,20 @@ public class Client {
         logInWindowGui.add(logInEnterUsername);
         logInWindowGui.add(logInUsernameBox);
         logInWindowGui.add(logInEnter);
+        
+        //Actionlistener for login window.
+        LogInWindowAction();
+        
+        logInWindow.setVisible(true);
     }
 
 
-    public static void LogInWindow_Action() {
+
+    public static void LogInWindowAction() {
         logInEnter.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        LOGIN_ACTION();
+                    	LoginAction();
                     }
 
                 }
@@ -292,14 +283,14 @@ public class Client {
         logInUsernameBox.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        LOGIN_ACTION();
+                    	LoginAction();
                     }
                 }
         );
     }
 
-
-    public static void LOGIN_ACTION() {
+    //Do this after login successfully. 
+    public static void LoginAction() {
         if (!logInUsernameBox.getText().equals("")) {
             userName = logInUsernameBox.getText().trim();
             mainWindow.setTitle("ChatRoom - " + userName);

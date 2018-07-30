@@ -4,21 +4,22 @@ import java.lang.reflect.Array;
 import java.net.*;
 import java.io.*;
 import javax.swing.*;
+
 import java.util.*;
 
 
 public class ClientThread implements Runnable {
 
-    //Globals
-    Socket sock;
+
+	Socket socket;
     public ObjectInputStream in;
     String[] currentUsers;
 
     private Client client;
 
     //Constructor getting the socket
-    public ClientThread(Client client, Socket s) {
-        this.sock = s;
+    public ClientThread(Client client, Socket socket) {
+        this.socket = socket;
         this.client = client;
 
     }
@@ -27,7 +28,7 @@ public class ClientThread implements Runnable {
     public void run() {
 
         try {
-            in = new ObjectInputStream(sock.getInputStream());
+            in = new ObjectInputStream(socket.getInputStream());
             checkStream();
 
         } catch (Exception E) {
@@ -36,19 +37,19 @@ public class ClientThread implements Runnable {
 
     }
 
-
+    //Receive messages permanently.
     public void checkStream() throws IOException, ClassNotFoundException {
         while (true) {
-            receive();
+        	receive();
         }
     }
 
-
+    //Receive messages permanently.
     public void receive() throws IOException, ClassNotFoundException {
         if (!in.equals(null)) {
             String message = (String) in.readObject();
 
-            //Hiermit werden User der UserListe hinzugef�gt.
+            //Add new user to userlist.
             if (message.startsWith("!")) {
                 String temp1 = message.substring(1);
                 temp1 = temp1.replace("[", "");
@@ -58,58 +59,73 @@ public class ClientThread implements Runnable {
                 Arrays.sort(currentUsers);
 
                 try {
-
                     SwingUtilities.invokeLater(
-                            new Runnable() {
-                                public void run() {
-
-                                    // TODO: hier müsste die GUI benachrichtigt werden
-                                    view.userOnlineList.setListData(currentUsers);
-                                }
+                    	new Runnable() {
+                    		public void run() {
+                    			
+                    			// TODO: hier müsste die GUI benachrichtigt werden
+                    			view.userOnlineList.setListData(currentUsers);
                             }
+                        }
                     );
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Unable to set Online list data");
+                    JOptionPane.showMessageDialog(null, "Unable to update online users!");
                 }
+                
+                
+            //receive messages:
+            //receive a public message.
             } else if (message.startsWith("@EE@|")) {
                 final String temp2 = message.substring(5);
 
                 SwingUtilities.invokeLater(
                         new Runnable() {
                             public void run() {
+                                
+                            	// TODO: hier müsste die GUI benachrichtigt werden
+                            	view.displayText.append("\n" + temp2);
 
-                                // TODO: hier müsste die GUI benachrichtigt werden
-                                view.displayText.append("\n" + temp2);
-
-                                //PrivateDialog.setNewMsg(temp2);
 
                             }
                         }
                 );
+            //receive a private message. 
             } else if (message.startsWith("@")) {
-                final String temp3 = message.substring(1);
-
+                final String msgtoshow = message.substring(1);
+                
+                String user = message.toString().substring(1, message.toString().indexOf(':'));
+                
+                
+                
                 SwingUtilities.invokeLater(
                         new Runnable() {
                             public void run() {
-                                //Client.displayText.append("\n"+temp3);
-
-                                // TODO: hier müsste der Privatdialog benachrichtigt werden
-                                privateDialog.setNewMsg(temp3);
-
-                                System.out.println(temp3);
-
-                                int result = JOptionPane.showConfirmDialog(null, "Neue Nachricht " + temp3, "Neue Nachricht", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-                                if (result == JOptionPane.YES_OPTION) {
-
-                                    new PrivateDialog(client);
-
-
-                                } else {
-                                    // TODO: hier müsste der Privatdialog benachrichtigt werden
-                                    privateDialog.getMsgInput().requestFocus();
-                                }
+                            	
+//                                System.out.println(msgtoshow);
+//
+//                                int result = JOptionPane.showConfirmDialog(null, "Eine Nachricht von "+user , "Neue Nachricht", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+//
+//                                if (result == JOptionPane.YES_OPTION) {
+//                                	
+//                                	
+//                                	new PrivateDialog();
+//                                 	PrivateDialog.setNewMsg(msgtoshow);
+//
+//                                } else {
+//                                    PrivateDialog.getMsgInput().requestFocus();
+//                                }
+                                
+//                                new PrivateDialog();
+                            	
+                            	//add Private message to priv msg window. 
+                                
+                            	
+                            	
+                            	
+                            	
+                            	
+                            	// TODO: hier müsste der Privatdialog benachrichtigt werden
+                            	privateDialog.setNewMsg(msgtoshow);
                             }
                         }
                 );
@@ -118,8 +134,8 @@ public class ClientThread implements Runnable {
         }
     }
 
-
-    public void send(String str) throws IOException {
+    //Send messages.
+    public void send(final String str) throws IOException {
         String writeStr;
         if (str.startsWith("@")) {
             SwingUtilities.invokeLater(
@@ -127,10 +143,10 @@ public class ClientThread implements Runnable {
 
                         @Override
                         public void run() {
-                            // TODO Auto-generated method stub
-                            //Client.displayText.append("\n" + Client.userName + ": " + str);
-
-                            privateDialog.setNewMsg("\n" + client.getUserName() + ": " + str);
+                        	
+                        	
+                        	// TODO: hier müsste der Privatdialog benachrichtigt werden
+                            privateDialog.setNewMsg("\n" + client.userName + ": " + str);
 
                         }
 
@@ -138,10 +154,11 @@ public class ClientThread implements Runnable {
             );
             writeStr = str;
         } else
-            writeStr = "@EE@|" + client.getUserName() + ": " + str;
+            writeStr = "@EE@|" + client.userName + ": " + str;
 
-        client.getOutput().writeObject(writeStr);
-        client.getOutput().flush();
+        client.output.writeObject(writeStr);
+        client.output.flush();
+        client.output.close();
 
 
     }

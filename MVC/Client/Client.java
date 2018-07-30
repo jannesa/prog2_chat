@@ -11,8 +11,6 @@ import java.io.*;
 
 public class Client {
 
-
-    //Globals
     public ClientThread clientThread;
     public String userName = "Anonymous";
     public Socket sock;

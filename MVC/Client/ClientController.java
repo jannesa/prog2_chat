@@ -16,7 +16,7 @@ public class ClientController {
         this.view = view;
 
 
-        // login_action
+        //login_action
         view.getLogInEnter().addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -51,7 +51,7 @@ public class ClientController {
 
                             client.setUserName(view.getLogInUsernameBox().getText().trim());
 
-                            view.getMainWindow().setTitle("ChatRoom - " + client.getUserName());
+                            view.getMainWindow().setTitle("Project ChatRoom - " + client.getUserName());
                             view.getLogInWindow().dispose();
                             view.getSubmit().setEnabled(true);
                             view.getMainWindow().setEnabled(true);
@@ -61,7 +61,7 @@ public class ClientController {
 
 
                         } else {
-                            JOptionPane.showMessageDialog(null, "Please Enter a name!");
+                            JOptionPane.showMessageDialog(null, "Please Enter a nickname!");
                         }
 
                     }
@@ -69,7 +69,7 @@ public class ClientController {
         );
 
 
-        ///ende login action
+        ///end login action
 
 
 
@@ -157,25 +157,12 @@ public class ClientController {
 
                                                 }
                                             });
-
-                                            //	typeText.setText("@" + selectedUser + ": ");
-                                            //	typeText.requestFocus();
-
                                         }
                                     }
                             );
                         }
-
                     }
                 }
         );
-
-
-
-
-
     }
-
-
-
 }

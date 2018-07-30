@@ -41,6 +41,8 @@ public class ServerThread extends Thread {
 	public boolean isOnline() {
 		return online;
 	}
+	
+	
 
 	public ServerThread(Server server, Socket socket) throws IOException, ClassNotFoundException {
 		// TODO Auto-generated constructor stub
@@ -76,22 +78,24 @@ public class ServerThread extends Thread {
 					stop();
 				}
 				
+				//handle the public messages.
 				if (message.toString().contains("@EE@"))
 					server.sendToAll(message);
 				else {
-					//Message, die an den Privaten User geschickt bzw ausgeben wird!
+					//modify a private message. 
 					String formattedMsg = "@" + username + message.toString().substring(message.toString().indexOf(':'));
 
-					//server.showMessage("dieser nutzer hat dir eine nachricht geschickt :  "+ username + "\n");
-
-					//Nachrichten zum senden schicken.
-					server.sendPrivately(message.toString().substring(1, message.toString().indexOf(':')), formattedMsg);
+					//handle the modified message and send it to the destination.
+					server.sendPrivate(message.toString().substring(1, message.toString().indexOf(':')), formattedMsg);
 				}
 			}
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally{
+		} 
+		
+		finally{
 			try {
 				server.removeClient(username);
 				System.out.println("logout :" + (String)username);

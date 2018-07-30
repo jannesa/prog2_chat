@@ -36,7 +36,6 @@ public class PrivateDialog extends JDialog{
 	JDialog dialog;
 	private JTextArea MsgOutput;
 	private JTextField MsgInput;
-    //JFrame privateframe;
     private JButton btnSenden = new JButton("Senden");
 
 	private Client client;

@@ -9,8 +9,6 @@ public class ClientView {
 
     private Client client;
 
-
-    //GUI Globals - Main Window
     public JFrame mainWindow = new JFrame();
     public JPanel gui = new JPanel();
 
@@ -31,7 +29,7 @@ public class ClientView {
     public JLabel message = new JLabel("Message:");
 
 
-    //GUI Globals - Login Window
+    //Login Window
     public JFrame logInWindow = new JFrame();
     public JPanel logInWindowGui = new JPanel();
     public JLabel logInEnterUsername = new JLabel("Enter Username: ");
@@ -62,8 +60,6 @@ public class ClientView {
 
 
         logInWindow.setVisible(true);
-
-
     }
 
 

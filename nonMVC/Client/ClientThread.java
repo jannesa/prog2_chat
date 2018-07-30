@@ -9,21 +9,21 @@ import java.util.*;
 
 public class ClientThread implements Runnable {
 
-    //Globals
-    Socket SOCK;
+
+    Socket socket;
     public ObjectInputStream in;
     String[] currentUsers;
 
     //Constructor getting the socket
-    public ClientThread(Socket X) {
-        this.SOCK = X;
+    public ClientThread(Socket socket) {
+        this.socket = socket;
     }
 
     @Override
     public void run() {
 
         try {
-            in = new ObjectInputStream(SOCK.getInputStream());
+            in = new ObjectInputStream(socket.getInputStream());
             CheckStream();
 
         } catch (Exception E) {
@@ -32,19 +32,19 @@ public class ClientThread implements Runnable {
 
     }
 
-
+    //Receive messages permanently.
     public void CheckStream() throws IOException, ClassNotFoundException {
         while (true) {
-            RECEIVE();
+        	receive();
         }
     }
 
-
-    public void RECEIVE() throws IOException, ClassNotFoundException {
+    //Receive messages permanently.
+    public void receive() throws IOException, ClassNotFoundException {
         if (!in.equals(null)) {
             String message = (String) in.readObject();
 
-            //Hiermit werden User der UserListe hinzugef�gt.
+            //Add new user to userlist.
             if (message.startsWith("!")) {
                 String temp1 = message.substring(1);
                 temp1 = temp1.replace("[", "");
@@ -54,17 +54,20 @@ public class ClientThread implements Runnable {
                 Arrays.sort(currentUsers);
 
                 try {
-
                     SwingUtilities.invokeLater(
-                            new Runnable() {
-                                public void run() {
-                                    Client.userOnlineList.setListData(currentUsers);
-                                }
+                    	new Runnable() {
+                    		public void run() {
+                    			Client.userOnlineList.setListData(currentUsers);
                             }
+                        }
                     );
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Unable to set Online list data");
+                    JOptionPane.showMessageDialog(null, "Unable to update online users!");
                 }
+                
+                
+            //receive messages:
+            //receive a public message.
             } else if (message.startsWith("@EE@|")) {
                 final String temp2 = message.substring(5);
 
@@ -78,28 +81,37 @@ public class ClientThread implements Runnable {
                             }
                         }
                 );
+            //receive a private message. 
             } else if (message.startsWith("@")) {
-                final String temp3 = message.substring(1);
-
+                final String msgtoshow = message.substring(1);
+                
+                String user = message.toString().substring(1, message.toString().indexOf(':'));
+                
+                
+                
                 SwingUtilities.invokeLater(
                         new Runnable() {
                             public void run() {
-                                //Client.displayText.append("\n"+temp3);
-                                PrivateDialog.setNewMsg(temp3);
-
-                                System.out.println(temp3);
-
-                                int result = JOptionPane.showConfirmDialog(null, "Eine Nachricht von +", "Neue Nachricht", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-                                if (result == JOptionPane.YES_OPTION) {
-
-
-                                    PrivateDialog pd = new PrivateDialog();
-
-
-                                } else {
-                                    PrivateDialog.getMsgInput().requestFocus();
-                                }
+                                //Client.displayText.append("\n"+msgtoshow);
+                            	
+//                                System.out.println(msgtoshow);
+//
+//                                int result = JOptionPane.showConfirmDialog(null, "Eine Nachricht von "+user , "Neue Nachricht", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+//
+//                                if (result == JOptionPane.YES_OPTION) {
+//                                	
+//                                	
+//                                	new PrivateDialog();
+//                                 	PrivateDialog.setNewMsg(msgtoshow);
+//
+//                                } else {
+//                                    PrivateDialog.getMsgInput().requestFocus();
+//                                }
+                                
+//                                new PrivateDialog();
+                            	
+                            	//add Private message to priv msg window. 
+                                PrivateDialog.setNewMsg(msgtoshow);
                             }
                         }
                 );
@@ -108,7 +120,7 @@ public class ClientThread implements Runnable {
         }
     }
 
-
+    //Send messages.
     public void SEND(final String str) throws IOException {
         String writeStr;
         if (str.startsWith("@")) {
@@ -132,7 +144,7 @@ public class ClientThread implements Runnable {
 
         Client.output.writeObject(writeStr);
         Client.output.flush();
-
+        Client.output.close();
 
     }
 
