@@ -13,7 +13,7 @@ public class ServerView {
     public ServerView () {
 
 
-        //Simple Gui for Server
+        
         serverView = new JFrame("Server");
         serverView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         serverView.setSize(500, 500);

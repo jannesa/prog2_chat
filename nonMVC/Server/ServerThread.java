@@ -75,16 +75,16 @@ public class ServerThread extends Thread {
 				}catch (Exception e){
 					stop();
 				}
-				
+				//Handle public message.
 				if (message.toString().contains("@EE@"))
 					server.sendToAll(message);
 				else {
-					//Message, die an den Privaten User geschickt bzw ausgeben wird!
+					//Edit message for message handler. 
 					String formattedMsg = "@" + username + message.toString().substring(message.toString().indexOf(':'));
 
-					//server.showMessage("dieser nutzer hat dir eine nachricht geschickt :  "+ username + "\n");
 
-					//Nachrichten zum senden schicken.
+
+					//Handle private messages
 					server.sendPrivately(message.toString().substring(1, message.toString().indexOf(':')), formattedMsg);
 				}
 			}

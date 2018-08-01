@@ -8,8 +8,7 @@ import javax.swing.*;
 
 public class Server {
 
-   /* JFrame serverGui;
-    JTextArea displayWindow;*/
+   
     public ServerSocket serverSocket;
     private Socket socket;
     public Hashtable<Socket, ObjectOutputStream> outputStreams;
@@ -34,15 +33,9 @@ public class Server {
 
 
 
-    //constructor
+    
     public Server(int port) throws IOException {
-       /* //Simple Gui for Server
-        serverGui = new JFrame("Server");
-        serverGui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        serverGui.setSize(500, 500);
-        displayWindow = new JTextArea();
-        serverGui.add(new JScrollPane(displayWindow), BorderLayout.CENTER);
-        serverGui.setVisible(true);*/
+       
 
 
         outputStreams = new Hashtable<Socket, ObjectOutputStream>();
@@ -62,21 +55,7 @@ public class Server {
         }
     }
 
-    //displaying message on Server Gui
-    /*public void showMessage(final String message) {
-        // TODO Auto-generated method stub
-        SwingUtilities.invokeLater(
-                new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        displayWindow.append(message);
-                    }
-
-                }
-        );
-    }*/
+    
 
     //Sending a message to all the available clients
     public void sendToAll(Object data) throws IOException {

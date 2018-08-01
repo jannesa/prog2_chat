@@ -15,9 +15,6 @@ public class Server {
     public Hashtable<String, ObjectOutputStream> clients;
     public boolean removed;
 
-    
-    
-    
     public boolean isRemoved() {
         return removed;
     }
@@ -39,6 +36,8 @@ public class Server {
     
     public Server(int port) throws IOException {
        
+
+
         outputStreams = new Hashtable<Socket, ObjectOutputStream>();
         clients = new Hashtable<String, ObjectOutputStream>();
 
@@ -56,8 +55,9 @@ public class Server {
         }
     }
 
-   
-    //Sending public message to all the available clients.
+    
+
+    //Sending a message to all the available clients
     public void sendToAll(Object data) throws IOException {
 
         for (Enumeration<ObjectOutputStream> e = getOutputStreams(); e.hasMoreElements(); ) {
@@ -66,7 +66,6 @@ public class Server {
                 ObjectOutputStream tempOutput = e.nextElement();
                 tempOutput.writeObject(data);
                 tempOutput.flush();
-                tempOutput.close();
             }
         }
     }
@@ -79,13 +78,12 @@ public class Server {
     }
 
     //Sending private message
-    public void sendPrivate(String username, String message) throws IOException {
+    public void sendPrivately(String username, String message) throws IOException {
         // TODO Auto-generated method stub
 
         ObjectOutputStream privateOutput = clients.get(username);
         privateOutput.writeObject(message);
         privateOutput.flush();
-        privateOutput.close();
     }
 
     //Removing the client from the client hash table
@@ -111,6 +109,10 @@ public class Server {
         ServerView.showMessage("\n" + username + "(" + socket.getInetAddress().getHostAddress() + ") is offline");
 
     }
+
+
+
+
 
 }
 
