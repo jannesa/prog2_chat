@@ -1,11 +1,14 @@
 package Client;
 
+import javax.naming.StringRefAddr;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
 
-public class ClientView {
+public class ClientView implements Observer {
 
     private Client client;
 
@@ -212,6 +215,19 @@ public class ClientView {
 
         mainWindow.setVisible(true);
     }
+
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		if (arg instanceof Events) {
+			Events event = (Events)arg;
+			if(event == Events.PUBLICMESSAGE) {
+				displayText.append("\n" + client.getClientThread().getPublicmessage());
+			}
+		}
+		
+	}
 
 
 }

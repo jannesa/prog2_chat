@@ -33,7 +33,7 @@ public class ClientController {
                             view.getTop().setText("Online");
 
                             view.BuildMainWindow();
-
+                            client.getClientThread().addObserver(view);
 
                         } else {
                             JOptionPane.showMessageDialog(null, "Please Enter a name!");
@@ -58,6 +58,7 @@ public class ClientController {
                             view.getTypeText().requestFocus();
                             client.connect();
                             view.getTop().setText("Online");
+                            client.getClientThread().addObserver(view);
 
 
                         } else {

@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.util.*;
 
 
-public class ClientThread implements Runnable {
+public class ClientThread extends Observable implements Runnable  {
 
 
 	Socket socket;
@@ -16,6 +16,7 @@ public class ClientThread implements Runnable {
     String[] currentUsers;
 
     private Client client;
+    String publicmessage ;
 
     //Constructor getting the socket
     public ClientThread(Client client, Socket socket) {
@@ -23,6 +24,10 @@ public class ClientThread implements Runnable {
         this.client = client;
 
     }
+    
+    public String getPublicmessage() {
+		return publicmessage;
+	}
 
     @Override
     public void run() {
@@ -64,7 +69,10 @@ public class ClientThread implements Runnable {
                     		public void run() {
                     			
                     			// TODO: hier müsste die GUI benachrichtigt werden
-                    			view.userOnlineList.setListData(currentUsers);
+                    			//userOnlineList.setListData(currentUsers);
+                    			setChanged();
+                    			notifyObservers(currentUsers);
+                    			
                             }
                         }
                     );
@@ -76,14 +84,16 @@ public class ClientThread implements Runnable {
             //receive messages:
             //receive a public message.
             } else if (message.startsWith("@EE@|")) {
-                final String temp2 = message.substring(5);
+                publicmessage = message.substring(5);
 
                 SwingUtilities.invokeLater(
                         new Runnable() {
                             public void run() {
                                 
                             	// TODO: hier müsste die GUI benachrichtigt werden
-                            	view.displayText.append("\n" + temp2);
+                            	//view.displayText.append("\n" + temp2);
+                            	setChanged();
+                            	notifyObservers(Events.PUBLICMESSAGE);
 
 
                             }
@@ -125,7 +135,7 @@ public class ClientThread implements Runnable {
                             	
                             	
                             	// TODO: hier müsste der Privatdialog benachrichtigt werden
-                            	privateDialog.setNewMsg(msgtoshow);
+                            	//privateDialog.setNewMsg(msgtoshow);
                             }
                         }
                 );
@@ -146,7 +156,7 @@ public class ClientThread implements Runnable {
                         	
                         	
                         	// TODO: hier müsste der Privatdialog benachrichtigt werden
-                            privateDialog.setNewMsg("\n" + client.userName + ": " + str);
+                            //privateDialog.setNewMsg("\n" + client.userName + ": " + str);
 
                         }
 
@@ -158,7 +168,7 @@ public class ClientThread implements Runnable {
 
         client.output.writeObject(writeStr);
         client.output.flush();
-        client.output.close();
+//        client.output.close();
 
 
     }

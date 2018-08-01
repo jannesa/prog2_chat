@@ -50,7 +50,7 @@ public class Server {
 
         while (true) {
             socket = serverSocket.accept();
-
+//            outputStreams.put(socket, new ObjectOutputStream(socket.getOutputStream()));
             new ServerThread(this, socket);
         }
     }
