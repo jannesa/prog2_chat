@@ -8,16 +8,14 @@ import javax.swing.*;
 
 public class Server {
 
-   
+   /* JFrame serverGui;
+    JTextArea displayWindow;*/
     public ServerSocket serverSocket;
     private Socket socket;
     public Hashtable<Socket, ObjectOutputStream> outputStreams;
     public Hashtable<String, ObjectOutputStream> clients;
     public boolean removed;
 
-    
-    
-    
     public boolean isRemoved() {
         return removed;
     }
@@ -36,9 +34,17 @@ public class Server {
 
 
 
-    
+    //constructor
     public Server(int port) throws IOException {
-       
+       /* //Simple Gui for Server
+        serverGui = new JFrame("Server");
+        serverGui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        serverGui.setSize(500, 500);
+        displayWindow = new JTextArea();
+        serverGui.add(new JScrollPane(displayWindow), BorderLayout.CENTER);
+        serverGui.setVisible(true);*/
+
+
         outputStreams = new Hashtable<Socket, ObjectOutputStream>();
         clients = new Hashtable<String, ObjectOutputStream>();
 
@@ -56,8 +62,23 @@ public class Server {
         }
     }
 
-   
-    //Sending public message to all the available clients.
+    //displaying message on Server Gui
+    /*public void showMessage(final String message) {
+        // TODO Auto-generated method stub
+        SwingUtilities.invokeLater(
+                new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        displayWindow.append(message);
+                    }
+
+                }
+        );
+    }*/
+
+    //Sending a message to all the available clients
     public void sendToAll(Object data) throws IOException {
 
         for (Enumeration<ObjectOutputStream> e = getOutputStreams(); e.hasMoreElements(); ) {
@@ -66,7 +87,6 @@ public class Server {
                 ObjectOutputStream tempOutput = e.nextElement();
                 tempOutput.writeObject(data);
                 tempOutput.flush();
-                tempOutput.close();
             }
         }
     }
@@ -79,13 +99,12 @@ public class Server {
     }
 
     //Sending private message
-    public void sendPrivate(String username, String message) throws IOException {
+    public void sendPrivately(String username, String message) throws IOException {
         // TODO Auto-generated method stub
 
         ObjectOutputStream privateOutput = clients.get(username);
         privateOutput.writeObject(message);
         privateOutput.flush();
-        privateOutput.close();
     }
 
     //Removing the client from the client hash table
@@ -111,6 +130,10 @@ public class Server {
         ServerView.showMessage("\n" + username + "(" + socket.getInetAddress().getHostAddress() + ") is offline");
 
     }
+
+
+
+
 
 }
 

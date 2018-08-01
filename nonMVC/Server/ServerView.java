@@ -11,28 +11,35 @@ public class ServerView {
 
 
     public ServerView () {
-        //GUI for Server
+
+
+        //Simple Gui for Server
         serverView = new JFrame("Server");
         serverView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         serverView.setSize(500, 500);
         displayWindow = new JTextArea();
         serverView.add(new JScrollPane(displayWindow), BorderLayout.CENTER);
         serverView.setVisible(true);
+
     }
 
 
-    //displaying notification message on Server GUI
+    //displaying message on Server Gui
     public static void showMessage(final String message) {
         // TODO Auto-generated method stub
         SwingUtilities.invokeLater(
-        	new Runnable() {
+                new Runnable() {
 
-        		@Override
-                public void run() {
-        			// TODO Auto-generated method stub
-                    displayWindow.append(message);
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        displayWindow.append(message);
+                    }
+
                 }
-            }
         );
     }
+
+
+
 }
