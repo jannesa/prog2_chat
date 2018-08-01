@@ -73,10 +73,11 @@ public class ServerThread extends Thread {
 				try{
 					message = input.readObject();
 				}catch (Exception e){
-//					stop();
+					
+					stop(); //Wichtig zum Beenden des Threads.
 					System.err.println("FEHLER bei " + username);
 					e.printStackTrace();
-					break;
+//					break;
 				}
 				//Handle public message.
 				if (message.toString().contains("@EE@"))

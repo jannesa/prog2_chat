@@ -13,11 +13,8 @@ public class Server {
     private Socket socket;
     public Hashtable<Socket, ObjectOutputStream> outputStreams;
     public Hashtable<String, ObjectOutputStream> clients;
-    public boolean removed;
 
-    public boolean isRemoved() {
-        return removed;
-    }
+
 
     public ServerSocket getServerSocket() {
         return serverSocket;
@@ -103,7 +100,7 @@ public class Server {
             outputStreams.remove(socket);
         }
 
-         removed = true;
+
 
         //Printing out the client along with the IP offline in the format of ReetAwwsum(123, 12, 21, 21) is offline
         ServerView.showMessage("\n" + username + "(" + socket.getInetAddress().getHostAddress() + ") is offline");

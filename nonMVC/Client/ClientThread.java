@@ -144,7 +144,7 @@ public class ClientThread implements Runnable {
 
         Client.output.writeObject(writeStr);
         Client.output.flush();
-        Client.output.close();
+
 
     }
 

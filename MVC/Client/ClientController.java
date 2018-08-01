@@ -30,9 +30,10 @@ public class ClientController {
                             view.getMainWindow().setEnabled(true);
                             view.getTypeText().requestFocus();
                             client.connect();
-                            view.getTop().setText("Online");
+                            
 
                             view.BuildMainWindow();
+                            view.setTop("Online");
                             client.getClientThread().addObserver(view);
 
                         } else {
@@ -46,23 +47,25 @@ public class ClientController {
 
         view.getLogInUsernameBox().addActionListener(
                 new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
+                	public void actionPerformed(ActionEvent e) {
                         if (!view.getLogInUsernameBox().getText().equals("")) {
 
                             client.setUserName(view.getLogInUsernameBox().getText().trim());
 
-                            view.getMainWindow().setTitle("Project ChatRoom - " + client.getUserName());
+                            view.getMainWindow().setTitle("ChatRoom - " + client.getUserName());
                             view.getLogInWindow().dispose();
                             view.getSubmit().setEnabled(true);
                             view.getMainWindow().setEnabled(true);
                             view.getTypeText().requestFocus();
                             client.connect();
-                            view.getTop().setText("Online");
+                            
+
+                            view.BuildMainWindow();
+                            view.setTop("Online");
                             client.getClientThread().addObserver(view);
 
-
                         } else {
-                            JOptionPane.showMessageDialog(null, "Please Enter a nickname!");
+                            JOptionPane.showMessageDialog(null, "Please Enter a name!");
                         }
 
                     }

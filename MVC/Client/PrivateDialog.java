@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -32,9 +34,9 @@ import java.awt.Insets;
 
 
 
-public class PrivateDialog extends JDialog{
+public class PrivateDialog extends JDialog {
 	JDialog dialog;
-	private JTextArea MsgOutput;
+	private static JTextArea MsgOutput;
 	private JTextField MsgInput;
     private JButton btnSenden = new JButton("Senden");
 
@@ -46,7 +48,7 @@ public class PrivateDialog extends JDialog{
     }
 
 
-    public void setNewMsg(String tmp) {
+    public static void setNewMsg(String tmp) {
         MsgOutput.append("\n"+tmp);
 
     }
@@ -100,6 +102,24 @@ public class PrivateDialog extends JDialog{
         dialog.setVisible(true);
 
     }
+    
+//    @Override
+//	public void update(Observable o, Object arg) {
+//		// TODO Auto-generated method stub
+//		if (arg instanceof PrivateEvents) {
+//			PrivateEvents privateevent = (PrivateEvents)arg;
+//			
+//			//write new public message
+//			if(privateevent == PrivateEvents.PRIVATEMESSAGE) {
+//				MsgOutput.append("\n" + client.getClientThread().getPrivatemessage());
+//			}
+//			if(privateevent == PrivateEvents.OWNPRIVATEMESSAGE) {
+//				MsgOutput.append("\n" + client.getClientThread().getMessagetosend());
+//			}
+//			
+//		}
+//		
+//	}
 
 
 

@@ -9,7 +9,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ClientView implements Observer {
-
     private Client client;
 
     public JFrame mainWindow = new JFrame();
@@ -69,17 +68,9 @@ public class ClientView implements Observer {
     public JFrame getMainWindow() {
         return mainWindow;
     }
-
-    public JPanel getGui() {
-        return gui;
-    }
-
-    public JPanel getTopBar() {
-        return topBar;
-    }
-
-    public JLabel getTop() {
-        return top;
+    
+    public void setTop(String set) {
+        top.setText(set);
     }
 
     public JPanel getUserList() {
@@ -90,48 +81,16 @@ public class ClientView implements Observer {
         return userOnlineList;
     }
 
-    public JScrollPane getListScroll() {
-        return listScroll;
-    }
-
     public JButton getSubmit() {
         return submit;
-    }
-
-    public JPanel getTextCenter() {
-        return textCenter;
-    }
-
-    public JTextArea getDisplayText() {
-        return displayText;
-    }
-
-    public JPanel getButtonLabelText() {
-        return buttonLabelText;
-    }
-
-    public JPanel getButtonText() {
-        return buttonText;
     }
 
     public JTextArea getTypeText() {
         return typeText;
     }
 
-    public JLabel getMessage() {
-        return message;
-    }
-
     public JFrame getLogInWindow() {
         return logInWindow;
-    }
-
-    public JPanel getLogInWindowGui() {
-        return logInWindowGui;
-    }
-
-    public JLabel getLogInEnterUsername() {
-        return logInEnterUsername;
     }
 
     public JTextField getLogInUsernameBox() {
@@ -222,8 +181,20 @@ public class ClientView implements Observer {
 		// TODO Auto-generated method stub
 		if (arg instanceof Events) {
 			Events event = (Events)arg;
+			
+			//write new public message
 			if(event == Events.PUBLICMESSAGE) {
 				displayText.append("\n" + client.getClientThread().getPublicmessage());
+			}
+			//write new userlist
+			if(event == Events.USERLIST) {
+				userOnlineList.setListData(client.getClientThread().getCurrentUsers());
+			}
+			if(event == Events.OWNPRIVATEMESSAGE) {
+				PrivateDialog.setNewMsg("\n" + client.getClientThread().getMessagetosend());
+			}
+			if(event == Events.PRIVATEMESSAGE) {
+				PrivateDialog.setNewMsg("\n" + client.getClientThread().getPrivatemessage());
 			}
 		}
 		

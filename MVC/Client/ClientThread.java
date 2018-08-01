@@ -16,7 +16,11 @@ public class ClientThread extends Observable implements Runnable  {
     String[] currentUsers;
 
     private Client client;
+    
     String publicmessage ;
+    String privatemessage;
+    
+    String messagetosend;
 
     //Constructor getting the socket
     public ClientThread(Client client, Socket socket) {
@@ -25,8 +29,20 @@ public class ClientThread extends Observable implements Runnable  {
 
     }
     
+    public String[] getCurrentUsers() {
+		return currentUsers;
+	}
+    
     public String getPublicmessage() {
 		return publicmessage;
+	}
+    
+    public String getPrivatemessage() {
+		return privatemessage;
+	}
+    
+    public String getMessagetosend() {
+		return messagetosend;
 	}
 
     @Override
@@ -68,30 +84,27 @@ public class ClientThread extends Observable implements Runnable  {
                     	new Runnable() {
                     		public void run() {
                     			
-                    			// TODO: hier müsste die GUI benachrichtigt werden
-                    			//userOnlineList.setListData(currentUsers);
+                    			
                     			setChanged();
-                    			notifyObservers(currentUsers);
+                            	notifyObservers(Events.USERLIST);
                     			
                             }
                         }
                     );
-                } catch (Exception e) {
+                } 
+                catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Unable to update online users!");
                 }
-                
-                
+            } 
             //receive messages:
             //receive a public message.
-            } else if (message.startsWith("@EE@|")) {
+            else if (message.startsWith("@EE@|")) {
                 publicmessage = message.substring(5);
 
                 SwingUtilities.invokeLater(
                         new Runnable() {
                             public void run() {
-                                
-                            	// TODO: hier müsste die GUI benachrichtigt werden
-                            	//view.displayText.append("\n" + temp2);
+
                             	setChanged();
                             	notifyObservers(Events.PUBLICMESSAGE);
 
@@ -99,14 +112,13 @@ public class ClientThread extends Observable implements Runnable  {
                             }
                         }
                 );
-            //receive a private message. 
-            } else if (message.startsWith("@")) {
-                final String msgtoshow = message.substring(1);
+            } 
+            //receive a private message.
+            else if (message.startsWith("@")) {
+                privatemessage = message.substring(1);
                 
                 String user = message.toString().substring(1, message.toString().indexOf(':'));
-                
-                
-                
+
                 SwingUtilities.invokeLater(
                         new Runnable() {
                             public void run() {
@@ -128,14 +140,9 @@ public class ClientThread extends Observable implements Runnable  {
 //                                new PrivateDialog();
                             	
                             	//add Private message to priv msg window. 
-                                
-                            	
-                            	
-                            	
-                            	
-                            	
-                            	// TODO: hier müsste der Privatdialog benachrichtigt werden
-                            	//privateDialog.setNewMsg(msgtoshow);
+
+                            	setChanged();
+                            	notifyObservers(Events.PRIVATEMESSAGE);
                             }
                         }
                 );
@@ -146,33 +153,30 @@ public class ClientThread extends Observable implements Runnable  {
 
     //Send messages.
     public void send(final String str) throws IOException {
-        String writeStr;
+        
+        messagetosend = str ;
         if (str.startsWith("@")) {
             SwingUtilities.invokeLater(
                     new Runnable() {
 
                         @Override
                         public void run() {
-                        	
-                        	
-                        	// TODO: hier müsste der Privatdialog benachrichtigt werden
-                            //privateDialog.setNewMsg("\n" + client.userName + ": " + str);
+
+                            setChanged();
+                        	notifyObservers(Events.OWNPRIVATEMESSAGE);
 
                         }
-
                     }
             );
-            writeStr = str;
-        } else
-            writeStr = "@EE@|" + client.userName + ": " + str;
+        } 
+        else {
+        	messagetosend = "@EE@|" + client.userName + ": " + messagetosend;
+        }
+        	
 
-        client.output.writeObject(writeStr);
+        client.output.writeObject(messagetosend);
         client.output.flush();
-//        client.output.close();
-
-
     }
-
 }
 
 
