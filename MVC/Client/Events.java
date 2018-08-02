@@ -1,0 +1,5 @@
+package Client;
+
+public enum Events {
+	PUBLICMESSAGE, USERLIST ,OWNPRIVATEMESSAGE, PRIVATEMESSAGE
+}
